@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  get 'store/index'
+  root 'store#index', as: 'store_index'
 
   resources :products
   # The priority is based upon order of creation: first created -> highest priority.
