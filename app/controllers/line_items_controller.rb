@@ -1,3 +1,5 @@
+require 'zip'
+
 class LineItemsController < ApplicationController
   include CurrentCart
   before_action :set_cart, only: [:create]
@@ -62,6 +64,23 @@ class LineItemsController < ApplicationController
       format.html { redirect_to line_items_url, notice: 'Line item was successfully destroyed.' }
       format.json { head :no_content }
     end
+  end
+
+  def bulk_download
+    line_items = LineItem.all
+    # Zip::File.open('some_name', Zip::File::CREATE) do |zipfile|
+    compressed_file_stream = Zip::OutputStream.write_buffer do |zipfile|
+      line_items.each do |line_item|
+        p line_item.to_json
+        zipfile.put_next_entry "line-item-#{line_item.id}"
+        zipfile.print line_item.to_json
+      end
+    end
+    puts "ENDDD"
+    p compressed_file_stream.methods - Object.instance_methods
+
+    compressed_file_stream.rewind
+    send_data(compressed_file_stream.read, :filename => 'zipp.zip', :disposition => "attachment")
   end
 
   private
