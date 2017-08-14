@@ -76,9 +76,17 @@ class LineItemsController < ApplicationController
         zipfile.print line_item.to_json
       end
     end
-    puts "ENDDD"
-    p compressed_file_stream.methods - Object.instance_methods
-
+    # puts "ENDDD"
+    # p compressed_file_stream.methods - Object.instance_methods
+    # compressed_file_stream.rewind
+    # p compressed_file_stream.read
+    # compressed_file_stream.rewind
+    # Zip::InputStream.open(StringIO.new(compressed_file_stream.read)) do |io|
+    #   while entry = io.get_next_entry
+    #     puts "found entry"
+    #     p entry
+    #   end
+    # end
     compressed_file_stream.rewind
     send_data(compressed_file_stream.read, :filename => 'zipp.zip', :disposition => "attachment")
   end
